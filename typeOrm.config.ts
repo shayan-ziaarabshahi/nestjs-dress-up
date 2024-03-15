@@ -1,22 +1,24 @@
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import { DataSource } from 'typeorm';
-import { Item } from './src/items/entities/item.entity';
-import { Listing } from './src/items/entities/listing.entity';
-import { Comment } from './src/items/entities/comment.entity';
-import { Tag } from './src/items/entities/tag.entity';
+import { User } from 'src/users/entities/user.entity';
 
-config();
+
+
+config({ path: '.env.development' });
 
 const configService = new ConfigService();
 
-export default new DataSource({
-  type: 'mysql',
-  host: configService.getOrThrow('MYSQL_HOST'),
-  port: configService.getOrThrow('MYSQL_PORT'),
-  database: configService.getOrThrow('MYSQL_DATABASE'),
-  username: configService.getOrThrow('MYSQL_USERNAME'),
-  password: configService.getOrThrow('MYSQL_PASSWORD'),
-  migrations: ['migrations/**'],
-  entities: [Item, Listing, Comment, Tag],
-});
+export const ormconfigs: DataSourceOptions = {
+  type: 'postgres',
+  host: configService.getOrThrow('POSTGRES_HOST'),
+  port: configService.getOrThrow('POSTGRES_PORT'),
+  database: configService.getOrThrow('POSTGRES_DATABASE'),
+  username: configService.getOrThrow('POSTGRES_USERNAME'),
+  password: configService.getOrThrow('POSTGRES_PASSWORD'),
+  synchronize: configService.getOrThrow('POSTGRES_SYNCHRONIZE'),
+  migrations: ['./dist/migrations/*.js'],
+  entities: [User]
+};
+
+export default new DataSource(ormconfigs);

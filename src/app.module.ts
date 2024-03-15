@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
-import { ItemsModule } from './items/items.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.development'],
+      isGlobal: true,
+    }),
     DatabaseModule,
-    ItemsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
